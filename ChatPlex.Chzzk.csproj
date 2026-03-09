@@ -14,7 +14,7 @@
     <Company />
     <Authors>SieR-VR (me@sier-vr.dev)</Authors>
     <RepositoryType></RepositoryType>
-    <RepositoryUrl></RepositoryUrl>
+    <RepositoryUrl>https://github.com/SieR-VR/ChatPlex.Chzzk</RepositoryUrl>
     <Platforms>x64</Platforms>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
