@@ -20,7 +20,7 @@ namespace ChatPlex.Chzzk
 
     public ReadOnlyCollection<(IChatService, IChatChannel)> Channels => m_Channels.Select(x => (this as IChatService, x)).ToList().AsReadOnly();
 
-    private List<IChatChannel> m_Channels = new List<IChatChannel>();
+    private readonly List<IChatChannel> m_Channels = [];
     private ChatListener? listener;
 
     public ChzzkService()
@@ -31,8 +31,11 @@ namespace ChatPlex.Chzzk
     public void Start()
     {
       listener = new ChatListener();
-      listener.OnMessage += ForwardTextMessageReceival;
-      listener.OnConnect += ForwardAsChannelJoin;
+      listener.OnMessage += ForwardTextMessageReception;
+      listener.OnChannelFound += ForwardAsChannelJoin;
+      listener.OnChannelNotFound += PrintWarning;
+      listener.OnConnect += ForwardAsChannelLive;
+      listener.OnDisconnect += ForwardAsChannelNotLive;
       _ = Task.Run(listener.Init);
     }
 
@@ -107,11 +110,10 @@ namespace ChatPlex.Chzzk
       return true;
     }
 
-    private void ForwardTextMessageReceival(ChzzkChatMessage e)
+    private void ForwardTextMessageReception(ChzzkChatMessage e)
     {
       try
       {
-        Plugin.Log?.Debug($"{nameof(ForwardTextMessageReceival)}(): {e}");
         m_OnTextMessageReceivedCallbacks.InvokeAll(this, e);
 
         if (!m_Channels.Contains(e.Channel))
@@ -125,9 +127,27 @@ namespace ChatPlex.Chzzk
       }
     }
 
-    private void ForwardAsChannelJoin(IChatChannel channel)
+    private void ForwardAsChannelJoin(string channelName)
     {
-      m_OnJoinRoomCallbacks.InvokeAll(this, channel);
+      m_OnJoinRoomCallbacks.InvokeAll(this, new ChzzkChatChannel(channelName));
+    }
+
+    private void PrintWarning(string channelId)
+    {
+      m_OnSystemMessageCallbacks.InvokeAll(this, $"<color=orange><b>Channel({channelId}) is not found. Please check your configuration.</b></color>");
+    }
+
+    private void ForwardAsChannelLive(string liveTitle)
+    {
+      Plugin.Log?.Debug($"{nameof(ForwardAsChannelLive)}(): {liveTitle}");
+      m_OnLiveStatusUpdatedCallbacks.InvokeAll(this, new ChzzkChatChannel(liveTitle), true, 0);
+      m_OnSystemMessageCallbacks.InvokeAll(this, $"<color=green><b>Joining \"{liveTitle}\" live!</b></color>");
+    }
+
+    private void ForwardAsChannelNotLive(string liveTitle)
+    {
+      m_OnLiveStatusUpdatedCallbacks.InvokeAll(this, new ChzzkChatChannel(liveTitle), false, 0);
+      m_OnSystemMessageCallbacks.InvokeAll(this, $"<color=green><b>Leaving \"{liveTitle}\" live!</b></color>");
     }
   }
 }
