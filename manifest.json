@@ -1,0 +1,20 @@
+{
+  "$schema": "https://raw.githubusercontent.com/bsmg/BSIPA-MetadataFileSchema/master/Schema.json",
+  "id": "chatplex.chzzk",
+  "name": "ChatPlex.Chzzk",
+  "author": "SieR",
+  "version": "0.2.1",
+  "description": "ChatPlexSDK.Chat addon for Chzzk.",
+  "gameVersion": "1.40.8",
+  "dependsOn": {
+    "BSIPA": "^4.0.5",
+    "SongCore": "^3.0.0",
+    "BeatSaberMarkupLanguage": "^1.8.0"
+  },
+  "loadAfter": [
+    "ChatPlexSDK_BS"
+  ],
+  "loadBefore": [
+    "wipbot"
+  ]
+}

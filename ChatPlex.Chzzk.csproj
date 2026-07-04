@@ -98,16 +98,6 @@
     </Reference>
   </ItemGroup>
 
-  <PropertyGroup>
-    <ImportBSMTTargets>True</ImportBSMTTargets>
-    <BSMTProjectType>BSIPA</BSMTProjectType>
-    <GenerateManifest>true</GenerateManifest>
-    <PluginId>ChatPlex.Chzzk</PluginId>
-    <PluginName>ChatPlex.Chzzk</PluginName>
-    <Description>Chzzk integration.</Description>
-    <Version>0.0.1</Version>
-    <GameVersion>1.39.1</GameVersion>
-  </PropertyGroup>
   <ItemGroup>
     <DependsOn Include="BSIPA" Version="^4.2.0" />
   </ItemGroup>
@@ -119,5 +109,10 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
   </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="manifest.json" />
+  </ItemGroup>
+
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
